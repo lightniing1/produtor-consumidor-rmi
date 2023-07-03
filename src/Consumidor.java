@@ -1,15 +1,20 @@
+import java.rmi.RemoteException;
+
 public class Consumidor implements Runnable {
 
-    private Fila fila;
-    private int i = 0;
-    Consumidor (Fila fila) {
+    private IMetodosFilaServidor fila;
+    Consumidor (IMetodosFilaServidor fila) {
         this.fila = fila;
         new Thread(this, "Consumidor").start();
     }
 
     public void run() {
-        while(true) {
-            fila.consumirItem();
+        for (int i = 0; i < 5000; i++){
+            try {
+                fila.consumirItem();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

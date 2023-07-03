@@ -1,12 +1,18 @@
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.Semaphore;
 
-public class Fila {
+public class Fila extends UnicastRemoteObject implements IMetodosFilaServidor {
 
     int item;
     static Semaphore semaphoreConsumer = new Semaphore(0);
     static Semaphore semaphoreProdutor = new Semaphore(1);
 
-    public void consumirItem() {
+    public Fila() throws RemoteException {
+        System.out.println("Fila instanciada");
+    }
+
+    public void consumirItem() throws RemoteException {
         try {
             semaphoreConsumer.acquire();
         } catch (InterruptedException e) {
@@ -17,7 +23,7 @@ public class Fila {
         semaphoreProdutor.release();
     }
 
-    public void produzirItem(int item) {
+    public void produzirItem(int item) throws RemoteException {
         try {
             semaphoreProdutor.acquire();
         } catch (InterruptedException e) {

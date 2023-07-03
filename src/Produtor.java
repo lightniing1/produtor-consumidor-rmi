@@ -1,16 +1,20 @@
-public class Produtor implements Runnable {
-    private Fila fila;
-    private int i = 0;
+import java.rmi.RemoteException;
 
-    Produtor (Fila fila) {
+public class Produtor implements Runnable {
+    private IMetodosFilaServidor fila;
+
+    Produtor (IMetodosFilaServidor fila) {
         this.fila = fila;
         new Thread(this, "Produtor").start();
     }
 
     public void run() {
-        while (true) {
-            fila.produzirItem(i);
-            i++;
+        for (int i = 0; i < 5000; i++){
+            try {
+                fila.produzirItem(i);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
